@@ -1,6 +1,6 @@
 {
   "name": "change-tracker",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Object-focused alternative to pub/sub models",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,9 @@
   },
   "keywords": [
     "publisher",
-    "subscriber"
+    "subscriber",
+    "pubsub",
+    "pub/sub"
   ],
   "author": "aggregate1166877",
   "license": "MIT",

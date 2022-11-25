@@ -4,8 +4,8 @@ An object-focused alternative to Publisher / Subscriber models.
 
 ## What's the purpose of this library?
 
-To offer a simple means of tracking a single variable's initialization and
-subsequent changes.
+To offer a simple means of tracking a variable's initialization and subsequent
+changes.
 
 The variable you're tracking can be a primitive or an object. This library is
 not opinionated about the data types you use.
@@ -77,7 +77,7 @@ gameObjects.playerShipTracker.getEveryChange((shipInstance) => {
 ```
 
 From very early on, our GFX engine renders anything that can be rendered. It
-should render the ship as soon as it's booted, but cannot use delayed callbacks
+should render the ship as soon as it's loaded, but cannot use delayed callbacks
 for obvious timing reasons (it would queue a new callback 60 times a second,
 indefinitely, and then eventually have thousands of old requests trigger at
 once). Instead of keeping track of boot manually, you can get the latest known
@@ -111,7 +111,7 @@ const gameObjects = { playerShipTracker };
 
 Note that your transpiler will already need to be set up to take advantage of
 this. For reference, the config we used to build Change Tracker can be found
-[here](https://github.com/frostoven/change-tracker/blob/master/webpack.config.js).
+[here](https://github.com/frostoven/change-tracker/blob/master/webpack.config.js#L42).
 
 ## Installation
 
@@ -238,7 +238,7 @@ setInterval(() => {
 
 ## Dependencies
 
-This package has no production dependencies, though it does use Babel
+This package has no production dependencies, though it does use Babel for
 transpilation and Webpack for bundling. If you dislike this, you can import the
 actual zero-dependency code as is using:
 ```
@@ -246,7 +246,7 @@ import ChangeTracker from 'change-tracker/src/index.ts';
 ```
 Note however that this method requires a transpiler with TypeScript support
 (you may look at our
-[webpack config](https://github.com/frostoven/change-tracker/blob/master/webpack.config.js)
+[webpack config](https://github.com/frostoven/change-tracker/blob/master/webpack.config.js#L42)
 to see how we did it).
 
 ## Why is this repo not being updated?
