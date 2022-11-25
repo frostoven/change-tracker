@@ -4,7 +4,7 @@ An object-focused alternative to Publisher / Subscriber models.
 
 ## What's the purpose of this library?
 
-To offer a simple means to track a single variable's initialization and
+To offer a simple means of tracking a single variable's initialization and
 subsequent changes.
 
 The variable you're tracking can be a primitive or an object. This library is
@@ -16,14 +16,15 @@ We are making a 3D video game and need to keep track of a spaceship. Game boot
 is asynchronous and spaceship load time cannot be determined. Additionally,
 some parts of our game need to be notified when the player switches to a
 different spaceship. To complicate matters, our main game loop runs at
-60 frames per second from early on and cannot use asynchronous callbacks.
+60 frames per second from early on and cannot use asynchronous callbacks, but
+needs to render the ship as soon as it's ready.
 
 Let's assume we have a spaceship class for loading our 3D spaceship. For the
 sake of demonstration, we'll define our ship as:
 ```js
 class PlayerShip {
   constructor() { console.log('New ship loaded.'); }
-  get name() { return 'Friday' }
+  get name() { return 'Friday'; }
   render() { /* do gfx magic */ }
 }
 ```
@@ -46,6 +47,7 @@ export {
 ```js
 // shipLoader.js
 
+// Create the spaceship:
 gameObjects.playerShipTracker.setValue(new PlayerShip());
 // ^^ message is logged: 'New ship loaded.'
 ```
@@ -59,7 +61,7 @@ On first init, welcome the player:
 gameObjects.playerShipTracker.getOnce((shipInstance) => {
   alert('Welcome to The Space Game!');
   console.log('Player loaded', shipInstance.name);
-})
+});
 ```
 
 Every time the ship is loaded (including init), update the UI:
@@ -75,10 +77,11 @@ gameObjects.playerShipTracker.getEveryChange((shipInstance) => {
 ```
 
 From very early on, our GFX engine renders anything that can be rendered. It
-should render the ship as soon as it's booted, but cannot use callbacks for
-obvious timing reasons (it gets called 60 times per second). Instead of keeping
-track of boot manually, you can get the latest known value of the ship. It will
-be undefined until the spaceship has loaded.
+should render the ship as soon as it's booted, but cannot use delayed callbacks
+for obvious timing reasons (it would queue a new callback 60 times a second,
+indefinitely, and then eventually have thousands of old requests trigger at
+once). Instead of keeping track of boot manually, you can get the latest known
+value of the ship. It will be undefined until the spaceship has loaded.
 Thereafter, we'll have a valid value.
 ```js
 function renderGame() {
@@ -143,8 +146,10 @@ class in window scope:
 
 ## Documentation
 
-All functions are annotated with JSDoc comments so that you IDE can feed you
+All functions are annotated with JSDoc comments so that your IDE can feed you
 manuals on the fly (triggered by Ctrl+Q in IntelliJ, for example).
+
+Examples:
 
 * Initialization:
 ```js
@@ -247,6 +252,6 @@ to see how we did it).
 ## Why is this repo not being updated?
 
 If we've done our job correctly, there shouldn't be many updates. This library
-is meant to simple yet powerful, and leaves design details up to you.
+is meant to be simple yet powerful, and leaves design details up to you.
 
 We'll update it to support modern tech changes as needed.
