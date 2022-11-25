@@ -1,4 +1,4 @@
-import ChangeTracker from './index.js';
+import ChangeTracker from '../index.js';
 
 console.log('-> ChangeTracker:', ChangeTracker);
 

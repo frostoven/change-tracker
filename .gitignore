@@ -118,3 +118,4 @@ desktop.ini
 build/change-tracker*
 dev.js
 index.js
+browser.js

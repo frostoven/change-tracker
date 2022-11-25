@@ -1,15 +1,25 @@
 const webpack = require('webpack');
 
 module.exports = (env, argv) => {
+  let mode = argv.mode;
+  let target = 'node';
+  let libraryTarget = 'umd';
   let bundleName = 'index';
+
   if (argv.mode === 'development') {
     bundleName = 'dev'
   }
+  else if (process.env.NODE_OPTIONS === 'force_browser') {
+    mode = 'production';
+    target = 'web';
+    libraryTarget = 'window';
+    bundleName = 'browser';
+  }
 
   return {
-    mode: "production",
+    mode,
     watch: false,
-    target: 'node',
+    target,
     entry: {
       [bundleName]: './src/index.ts',
     },
@@ -18,7 +28,7 @@ module.exports = (env, argv) => {
       filename: '[name].js',
       library: 'ChangeTracker',
       libraryExport: 'default',
-      libraryTarget: 'umd',
+      libraryTarget,
     },
     module: {
       rules: [
@@ -56,7 +66,7 @@ module.exports = (env, argv) => {
       ]
     },
     resolve: {
-      extensions: [ '.ts' ]
+      extensions: [ '.ts' ],
     },
   };
 };

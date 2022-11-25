@@ -1,0 +1,3 @@
+# If .npmignore is present, NPM ignores .gitignore. This is needed to ensure we
+# get our dev and non-bundle versions uploaded.
+.idea
