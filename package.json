@@ -9,6 +9,10 @@
     "build-all": "npm run build && npm run build-dev",
     "test": "node test.mjs"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frostoven/change-tracker.git"
+  },
   "keywords": [
     "publisher",
     "subscriber"
