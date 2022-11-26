@@ -10,6 +10,41 @@ changes.
 The variable you're tracking can be a primitive or an object. This library is
 not opinionated about the data types you use.
 
+## Quickstart
+
+```bash
+npm install change-tracker
+````
+
+```js
+import ChangeTracker from 'change-tracker';
+
+// Init the tracker
+const myTrackedObject = new ChangeTracker();
+
+// Set a value. This may be done at any time. We track the parent object reference.
+myTrackedObject.setValue({ name: 'John' });
+
+// Log the value if already set; else, log it as soon as it's set.
+myTrackedObject.getOnce(({ name }) => {
+  console.log('-> [Logged once] Name:', name);
+});
+
+// Log the value every time it changes. Log immediately if it's already been set.
+myTrackedObject.getEveryChange(({ name }) => {
+  console.log('-> [Logged every time] Name:', name);
+});
+
+// Log the value next time it's set. Don't log if it's already been set.
+myTrackedObject.getNext(({ name }) => {
+  console.log('-> [Logged on next change] Name:', name);
+});
+
+// You can directly check the last known value. This is undefined if not yet
+// set, else it contains the most recently set value.
+console.log(myTrackedObject.cachedValue);
+```
+
 ## Example use-case
 
 We are making a 3D video game and need to keep track of a spaceship. Game boot
