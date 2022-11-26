@@ -76,8 +76,8 @@ export default class ChangeTracker {
   }
 
   set cachedValue(value) {
-    // Using cache directly reduces readability if a user is not familiar with
-    // the internals; warn.
+    // Setting cache directly reduces readability if a user is not familiar
+    // with the internals; warn.
     console.warn('ChangeTracker.cached should not be set directly. Use .setValue() instead.');
     this.setValue(value);
   }
@@ -87,7 +87,7 @@ export default class ChangeTracker {
    * value has already been set, you'll be notified immediately.
    * @param {function} callback
    */
-  getOnce(callback) {
+  getOnce(callback: Function) {
     if (this._valueAlreadySet) {
       callback(this._cached);
     }
@@ -96,23 +96,32 @@ export default class ChangeTracker {
     }
   }
 
-  // Using this, you'll be notified every time the value changes. If the value
-  // has already been set, you'll be notified immediately.
-  getEveryChange(callback) {
+  /**
+   * Using this, you'll be notified every time the value changes. If the value
+   * has already been set, you'll be notified immediately.
+   * @param {function} callback
+   */
+  getEveryChange(callback: Function) {
     this._multiListeners.push(callback);
     if (this._valueAlreadySet) {
       callback(this._cached);
     }
   }
 
-  // Notified you the next time the value changes. Does not return the current
-  // value.
-  getNext(callback) {
+  /**
+   * Notified you the next time the value changes. Does not return the current
+   * value.
+   * @param {function} callback
+   */
+  getNext(callback: Function) {
     this._nextListeners.push(callback);
   }
 
-  // Sets the value, then notifies those waiting for it.
-  setValue(value) {
+  /**
+   * Sets the value, then notifies those waiting for it.
+   * @param {*} value
+   */
+  setValue(value: any) {
     // We store all callbacks in here, then call them afterwards. This is to
     // prevent situations where a running function does something to make us
     // lose queue priority (like async operations) while another function tries

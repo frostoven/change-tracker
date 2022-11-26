@@ -236,6 +236,13 @@ setInterval(() => {
 }, 500);
 ```
 
+* For special requirements where delayed callbacks are not appropriate, you can
+read the latest value directly:
+```js
+console.log('-> Value:', trackedValue.cachedValue);
+// ^^ undefined if not yet set, otherwise the currently held value.
+```
+
 ## Dependencies
 
 This package has no production dependencies, though it does use Babel for

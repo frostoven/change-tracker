@@ -30,7 +30,7 @@
       }
 
       var myVar = new ChangeTracker();
-      myVar.getOnce(v => codeOutput.append('-> Got value: ', v));
+      myVar.getOnce(v => codeOutput.append('-> Test passed. Got value: ', v));
       setTimeout(() => {
         myVar.setValue(Math.random());
       }, 1000)
