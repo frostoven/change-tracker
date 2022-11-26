@@ -42,7 +42,7 @@ myTrackedObject.getNext(({ name }) => {
 
 // You can directly check the last known value. This is undefined if not yet
 // set, else it contains the most recently set value.
-console.log(myTrackedObject.cachedValue);
+console.log('Cached name:', myTrackedObject.cachedValue.name);
 ```
 
 ## Example use-case
