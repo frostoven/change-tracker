@@ -1,6 +1,6 @@
 {
   "name": "change-tracker",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Object-focused alternative to pub/sub models",
   "main": "index.js",
   "scripts": {
@@ -17,8 +17,25 @@
   "keywords": [
     "publisher",
     "subscriber",
+    "subscribe",
     "pubsub",
-    "pub/sub"
+    "pub/sub",
+    "publish/subscribe",
+    "state",
+    "state management",
+    "eventEmitter",
+    "eventDispatcher",
+    "dispatcher",
+    "emit",
+    "event",
+    "events",
+    "emitter",
+    "addListener",
+    "action",
+    "flow",
+    "reactor",
+    "trigger",
+    "on"
   ],
   "author": "aggregate1166877",
   "license": "MIT",
