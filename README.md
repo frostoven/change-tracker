@@ -42,7 +42,7 @@ myTrackedObject.getNext(({ name }) => {
 
 // You can directly check the last known value. This is undefined if not yet
 // set, else it contains the most recently set value.
-console.log('Cached name:', myTrackedObject.cachedValue.name);
+console.log('Cached name:', myTrackedObject.cachedValue?.name);
 ```
 
 ## Example use-case
@@ -276,6 +276,17 @@ read the latest value directly:
 ```js
 console.log('-> Value:', trackedValue.cachedValue);
 // ^^ undefined if not yet set, otherwise the currently held value.
+```
+
+### Edge-case functions
+
+* In almost all cases, you should use `setValue()` to change the stored value
+as this rightfully notifies all listeners who need to know of the change. If
+you feel you have a very good reason to bypass notifying all listeners, and
+you're sure the bypass won't mess up state in your application, you can set the
+value and suppress notifications with:
+```js
+trackedValue.setSilent('This value will not be propagated.');
 ```
 
 ## Dependencies

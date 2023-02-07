@@ -165,6 +165,16 @@ export default class ChangeTracker {
   }
 
   /**
+   * Sets the value, but does not notify anything listening for changes. This
+   * should not be done in most cases, and is likely to create state corruption
+   * bugs if used frivolously.
+   * @param {*} value
+   */
+  setSilent(value: any) {
+    this._cached = value;
+  }
+
+  /**
    * Removes a listener that was set using getOnce().
    * @param {function} listener - Function originally passed to getOnce().
    * @return {boolean} Returns true if removed, false if not found.
