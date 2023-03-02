@@ -1,6 +1,6 @@
 {
   "name": "change-tracker",
-  "version": "1.0.7",
+  "version": "1.3.0",
   "description": "Object-focused alternative to pub/sub models",
   "main": "index.js",
   "scripts": {
