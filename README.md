@@ -271,6 +271,25 @@ setInterval(() => {
 }, 500);
 ```
 
+* In some cases, you may want to wait for multiple trackers to resolve, similar
+to how `Promise.all()` functions. ChangeTracker has a static function named
+`ChangeTracker.waitForAll()` which serves this purpose. It returns a
+ChangeTracker instance for you to watch. Example:
+```js
+const resolvesQuickly = new ChangeTracker();
+const resolvesSlowly = new ChangeTracker();
+
+ChangeTracker.waitForAll([
+  resolvesQuickly,
+  resolvesSlowly,
+]).getOnce(() => {
+  console.log('All trackers resolved.');
+});
+
+setTimeout(() => resolvesQuickly.setValue(1), 10);
+setTimeout(() => resolvesSlowly.setValue(1), 5000);
+```
+
 * For special requirements where delayed callbacks are not appropriate, you can
 read the latest value directly:
 ```js
@@ -286,7 +305,7 @@ you feel you have a very good reason to bypass notifying all listeners, and
 you're sure the bypass won't mess up state in your application, you can set the
 value and suppress notifications with:
 ```js
-trackedValue.setSilent('This value will not be propagated.');
+trackedValue.setSilent('This value is not be propagated.');
 ```
 
 ## Dependencies
