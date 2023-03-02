@@ -40,6 +40,52 @@ export default class ChangeTracker {
   private _nextListeners: Function[];
 
   /**
+   * Static function that waits for all specified ChangeTracker instances to
+   * perform at least one getOnce. Returns a ChangeTracker instance to keep
+   * track of progress completion; this returned ChangeTracker will provide an
+   * an {error,results} style response with an array containing the results of
+   * the trackers you provide, in order. The error object will be null unless a
+   * timeout it set.
+   *
+   * You may specify a timeout. If the timeout is reached and everything has
+   * not been resolved, then the returned ChangeTracker instance will emit an
+   * error with partial results. If everything eventually completes, the
+   * returned tracker will emit again, this time with full results.
+   */
+  static waitForAll(trackers: Array<ChangeTracker>, timeoutMs = 0) {
+    let waiter = new ChangeTracker();
+
+    let fulfilled = 0;
+    const total = trackers.length;
+    const results = new Array(total);
+
+    let timer;
+    if (timeoutMs > 0) {
+      timer = setTimeout(() => {
+        waiter.setValue({
+          error: `[ChangeTracker.waitForAll] Not done after ${timeoutMs}ms`,
+          results,
+        });
+      }, timeoutMs);
+    }
+
+    for (let i = 0; i < total; i++) {
+      const tracker = trackers[i];
+      tracker.getOnce((value) => {
+        results[i] = value;
+        if (++fulfilled === total) {
+          if (timer) {
+            clearTimeout(timer);
+          }
+          waiter.setValue({ error: null, results });
+        }
+      });
+    }
+
+    return waiter;
+  }
+
+  /**
    * @param {any} initialValue - The initial value. Be careful with this if
    *   heavily relying on getNext() immediately after initialisation.
    * @param {object|undefined} Options
@@ -140,6 +186,7 @@ export default class ChangeTracker {
       }
 
       // Mark for garbage collection.
+      // @ts-ignore
       this._singleListeners = null;
     }
 
