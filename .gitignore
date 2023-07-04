@@ -119,3 +119,6 @@ build/change-tracker*
 dev.js
 index.js
 browser.js
+
+# PNPM support
+pnpm-lock.yaml
