@@ -51,6 +51,9 @@ export default class ChangeTracker {
    * not been resolved, then the returned ChangeTracker instance will emit an
    * error with partial results. If everything eventually completes, the
    * returned tracker will emit again, this time with full results.
+   *
+   * @param {Array<ChangeTracker>} trackers
+   * @param {number} [timeoutMs]
    */
   static waitForAll(trackers: Array<ChangeTracker>, timeoutMs = 0) {
     let waiter = new ChangeTracker();
@@ -86,9 +89,9 @@ export default class ChangeTracker {
   }
 
   /**
-   * @param {any} initialValue - The initial value. Be careful with this if
+   * @param {any} [initialValue] - The initial value. Be careful with this if
    *   heavily relying on getNext() immediately after initialisation.
-   * @param {object|undefined} Options
+   * @param {object|undefined} [Options]
    * @param {boolean} Options.forceSetFlag If true, makes the ChangeTracker
    *   believe a value has been set at least once, even if it hasn't been set
    *   at all. The purpose of this flag is to make getOnce() and getEveryChange()
