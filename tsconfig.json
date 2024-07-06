@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "es2019",
+    "noImplicitAny": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "incremental": false,
+    "declaration": true,
+    "declarationDir": "lib",
+    "esModuleInterop": true,
+    "emitDeclarationOnly": true
+  },
+  "rules": {
+    "semicolon": [ true, "always" ]
+  },
+  "include": ["src/**/*"]
+}
