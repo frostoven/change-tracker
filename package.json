@@ -7,7 +7,8 @@
     "build": "webpack --mode production",
     "build-dev": "webpack --mode development",
     "build-browser": "NODE_OPTIONS=force_browser webpack --mode production",
-    "build-all": "npm run build && npm run build-dev && npm run build-browser",
+    "tsc": "tsc",
+    "build-all": "tsc && npm run build && npm run build-dev && npm run build-browser",
     "test": "node tests/test.mjs"
   },
   "repository": {
