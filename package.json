@@ -56,7 +56,9 @@
     "babel-runtime": "6.26.0",
     "binary-loader": "0.0.1",
     "webpack": "5.92.1",
-    "webpack-cli": "5.1.4",
+    "webpack-cli": "5.1.4"
+  },
+  "optionalDependencies": {
     "win-node-env": "0.6.1"
   }
 }
