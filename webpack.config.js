@@ -24,7 +24,7 @@ module.exports = (env, argv) => {
       [bundleName]: './src/index.ts',
     },
     output: {
-      path: __dirname,
+      path: __dirname + '/lib',
       filename: '[name].js',
       library: 'ChangeTracker',
       libraryExport: 'default',

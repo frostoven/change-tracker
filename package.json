@@ -2,7 +2,7 @@
   "name": "change-tracker",
   "version": "1.4.1",
   "description": "Object-focused alternative to pub/sub models",
-  "main": "index.js",
+  "main": "lib",
   "scripts": {
     "build": "webpack --mode production",
     "build-dev": "webpack --mode development",
