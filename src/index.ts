@@ -1,14 +1,16 @@
+type FlagType = { forceSetFlag: boolean };
+
 /**
  * Mechanism to keep track variable initialisation and changes.
  */
-export default class ChangeTracker {
+export default class ChangeTracker<ValueType = any> {
   /**
    * The variable being tracked. Please do not directly edit this value;
    * doing so will mess up logical integrity. Instead, use setValue() to
    * alter it.
    * @private
    */
-  private _cached: any;
+  private _cached: ValueType | undefined;
 
   /**
    * Use this if you want to trick the constructor into setting undefined as
@@ -43,17 +45,14 @@ export default class ChangeTracker {
    * Static function that waits for all specified ChangeTracker instances to
    * perform at least one getOnce. Returns a ChangeTracker instance to keep
    * track of progress completion; this returned ChangeTracker will provide an
-   * an {error,results} style response with an array containing the results of
-   * the trackers you provide, in order. The error object will be null unless a
+   * {error,results} style response with an array containing the results of the
+   * trackers you provide, in order. The error object will be null unless a
    * timeout it set.
    *
    * You may specify a timeout. If the timeout is reached and everything has
    * not been resolved, then the returned ChangeTracker instance will emit an
    * error with partial results. If everything eventually completes, the
    * returned tracker will emit again, this time with full results.
-   *
-   * @param {Array<ChangeTracker>} trackers
-   * @param {number} [timeoutMs]
    */
   static waitForAll(trackers: Array<ChangeTracker>, timeoutMs = 0) {
     let waiter = new ChangeTracker();
@@ -62,7 +61,7 @@ export default class ChangeTracker {
     const total = trackers.length;
     const results = new Array(total);
 
-    let timer;
+    let timer: number;
     if (timeoutMs > 0) {
       timer = setTimeout(() => {
         waiter.setValue({
@@ -89,9 +88,9 @@ export default class ChangeTracker {
   }
 
   /**
-   * @param {any} [initialValue] - The initial value. Be careful with this if
+   * @param {any} initialValue - The initial value. Be careful with this if
    *   heavily relying on getNext() immediately after initialisation.
-   * @param {object|undefined} [Options]
+   * @param {object|undefined} Options
    * @param {boolean} Options.forceSetFlag If true, makes the ChangeTracker
    *   believe a value has been set at least once, even if it hasn't been set
    *   at all. The purpose of this flag is to make getOnce() and getEveryChange()
@@ -99,7 +98,10 @@ export default class ChangeTracker {
    *   is false, which means those functions will only call back after
    *   setValue() has been called at least once.
    */
-  constructor(initialValue=undefined, { forceSetFlag=false }={forceSetFlag: false}) {
+  constructor(
+    initialValue: ValueType | any = undefined,
+    { forceSetFlag = false }: FlagType = { forceSetFlag: false },
+  ) {
     this._cached = initialValue;
 
     if (forceSetFlag) {
@@ -120,11 +122,11 @@ export default class ChangeTracker {
    * The exact value as it's currently stored. Note that this may be undefined,
    * and is not ideal for all cases.
    */
-  get cachedValue() {
+  get cachedValue(): ValueType | undefined {
     return this._cached;
   }
 
-  set cachedValue(value) {
+  set cachedValue(value: ValueType | undefined) {
     // Setting cache directly reduces readability if a user is not familiar
     // with the internals; warn.
     console.warn('ChangeTracker.cached should not be set directly. Use .setValue() instead.');
@@ -136,7 +138,7 @@ export default class ChangeTracker {
    * value has already been set, you'll be notified immediately.
    * @param {function} callback
    */
-  getOnce(callback: Function) {
+  getOnce(callback: (value: ValueType | undefined) => void) {
     if (this._valueAlreadySet) {
       callback(this._cached);
     }
@@ -150,7 +152,7 @@ export default class ChangeTracker {
    * has already been set, you'll be notified immediately.
    * @param {function} callback
    */
-  getEveryChange(callback: Function) {
+  getEveryChange(callback: (value: ValueType | undefined) => void) {
     this._multiListeners.push(callback);
     if (this._valueAlreadySet) {
       callback(this._cached);
@@ -162,7 +164,7 @@ export default class ChangeTracker {
    * value.
    * @param {function} callback
    */
-  getNext(callback: Function) {
+  getNext(callback: (value: ValueType) => void) {
     this._nextListeners.push(callback);
   }
 
@@ -170,7 +172,7 @@ export default class ChangeTracker {
    * Sets the value, then notifies those waiting for it.
    * @param {*} value
    */
-  setValue(value: any) {
+  setValue(value: ValueType | undefined) {
     // We store all callbacks in here, then call them afterwards. This is to
     // prevent situations where a running function does something to make us
     // lose queue priority (like async operations) while another function tries
@@ -220,7 +222,7 @@ export default class ChangeTracker {
    * bugs if used frivolously.
    * @param {*} value
    */
-  setSilent(value: any) {
+  setSilent(value: ValueType) {
     this._cached = value;
   }
 
@@ -229,7 +231,7 @@ export default class ChangeTracker {
    * @param {function} listener - Function originally passed to getOnce().
    * @return {boolean} Returns true if removed, false if not found.
    */
-  removeGetOnceListener(listener: Function) {
+  removeGetOnceListener(listener: Function): boolean {
     const index = this._singleListeners.indexOf(listener);
     return !!(index !== -1 && this._singleListeners.splice(index, 1));
   }
@@ -239,7 +241,7 @@ export default class ChangeTracker {
    * @param {function} listener - Function originally passed to getEveryChange().
    * @return {boolean} Returns true if removed, false if not found.
    */
-  removeGetEveryChangeListener(listener: Function) {
+  removeGetEveryChangeListener(listener: Function): boolean {
     const index = this._multiListeners.indexOf(listener);
     return !!(index !== -1 && this._multiListeners.splice(index, 1));
   }
@@ -249,7 +251,7 @@ export default class ChangeTracker {
    * @param {function} listener - Function originally passed to getEveryChange().
    * @return {boolean} Returns true if removed, false if not found.
    */
-  removeGetNextListener(listener: Function) {
+  removeGetNextListener(listener: Function): boolean {
     const index = this._nextListeners.indexOf(listener);
     return !!(index !== -1 && this._nextListeners.splice(index, 1));
   }

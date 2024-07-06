@@ -62,25 +62,25 @@ export default class ChangeTracker<ValueType = any> {
      *   is false, which means those functions will only call back after
      *   setValue() has been called at least once.
      */
-    constructor(initialValue?: any, { forceSetFlag }?: FlagType);
+    constructor(initialValue?: ValueType | any, { forceSetFlag }?: FlagType);
     /**
      * The exact value as it's currently stored. Note that this may be undefined,
      * and is not ideal for all cases.
      */
-    get cachedValue(): ValueType;
-    set cachedValue(value: ValueType);
+    get cachedValue(): ValueType | undefined;
+    set cachedValue(value: ValueType | undefined);
     /**
      * Using this, you'll be notified the first time the value changes. If the
      * value has already been set, you'll be notified immediately.
      * @param {function} callback
      */
-    getOnce(callback: (value: ValueType) => void): void;
+    getOnce(callback: (value: ValueType | undefined) => void): void;
     /**
      * Using this, you'll be notified every time the value changes. If the value
      * has already been set, you'll be notified immediately.
      * @param {function} callback
      */
-    getEveryChange(callback: (value: ValueType) => void): void;
+    getEveryChange(callback: (value: ValueType | undefined) => void): void;
     /**
      * Notified you the next time the value changes. Does not return the current
      * value.
@@ -91,7 +91,7 @@ export default class ChangeTracker<ValueType = any> {
      * Sets the value, then notifies those waiting for it.
      * @param {*} value
      */
-    setValue(value: ValueType): void;
+    setValue(value: ValueType | undefined): void;
     /**
      * Sets the value, but does not notify anything listening for changes. This
      * should not be done in most cases, and is likely to create state corruption
