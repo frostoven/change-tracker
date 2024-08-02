@@ -1,6 +1,6 @@
 ## Change Tracker
 
-An object-focused alternative to Publisher / Subscriber models.
+A zero-dependency object-focused alternative to Publisher / Subscriber models.
 
 ## What's the purpose of this library?
 
@@ -131,17 +131,26 @@ function renderGame() {
 
 #### Better IDE completion
 
-If you want better IDE autocompletion, you can instead use
-TypeScript in the initial definition. Here's an example of how you could
-rewrite the definition in the first example code block:
+Option 1: Using a type argument
+
+```ts
+const playerShipTracker = new ChangeTracker<{ ship: PlayerShip }>();
+
+playerShipTracker.getOnce(({ ship }) => {
+  ship. // <- auto-completes properties
+});
+
+playerShipTracker.cachedValue. // <- auto-completes properties
+```
+
+Option 2: Extending the ChangeTracker class
+
 ```ts
 interface TrackedPlayerShip extends ChangeTracker { cachedValue: PlayerShip; }
 
 const playerShipTracker: TrackedPlayerShip = new ChangeTracker();
 
-const gameObjects = { playerShipTracker };
-
-// gameObjects.playerShipTracker.cachedValue.<< auto-completes properties >>
+playerShipTracker.cachedValue. // <- auto-completes properties
 ```
 
 Note that your transpiler will already need to be set up to take advantage of
@@ -229,6 +238,8 @@ function onValueChange(trackedValue) {
   console.log('Value has changed to:', trackedValue);
 }
 
+// You may optionally pass true as a second parameter to ignore the current
+// value if it's already been set.
 trackedValue.getEveryChange(onValueChange);
 
 // [...]
@@ -296,6 +307,17 @@ read the latest value directly:
 console.log('-> Value:', trackedValue.cachedValue);
 // ^^ undefined if not yet set, otherwise the currently held value.
 ```
+
+### Aliases
+
+Some functions have aliases:
+* `get` - alias of `getOnce`.
+* `listen` - alias of `getEveryChange`.
+* `next` - alias of `getNext`.
+* `removeGet` - alias of `removeGetOnceListener`.
+* `removeListen` - alias of `removeGetEveryChangeListener`.
+* `removeNext` - alias of `removeGetNextListener`.
+
 
 ### Edge-case functions
 
