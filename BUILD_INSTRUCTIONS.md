@@ -1,8 +1,9 @@
 ## Change Tracker Build Instructions
 
-Note: These build instructions aren't necessary if installing via npm.
+_Note: These build instructions aren't necessary if installing this package via
+`npm`._
 
-Prepare dependencies:
+Install the tools needed to build this package:
 ```bash
 npm install
  ```
@@ -10,4 +11,9 @@ npm install
 Create all bundles:
 ```bash
 npm run build-all
+```
+
+You may run tests like so:
+```bash
+npm test
 ```
