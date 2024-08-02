@@ -151,10 +151,15 @@ export default class ChangeTracker<ValueType = any> {
    * Using this, you'll be notified every time the value changes. If the value
    * has already been set, you'll be notified immediately.
    * @param {function} callback
+   * @param {boolean} ignoreCurrent - If true, don't immediately call back if a
+   *   value has already been set.
    */
-  getEveryChange(callback: (value: ValueType | undefined) => void) {
+  getEveryChange(
+    callback: ((value: ValueType | undefined) => void) | Function,
+    ignoreCurrent?: boolean | undefined,
+  ) {
     this._multiListeners.push(callback);
-    if (this._valueAlreadySet) {
+    if (this._valueAlreadySet && !ignoreCurrent) {
       callback(this._cached);
     }
   }

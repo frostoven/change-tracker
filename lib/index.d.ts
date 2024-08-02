@@ -37,6 +37,18 @@ export default class ChangeTracker<ValueType = any> {
      * @private
      */
     private _nextListeners;
+    /** Alias of getOnce(). */
+    private get;
+    /** Alias of getEveryChange(). */
+    private listen;
+    /** Alias of getNext(). */
+    private next;
+    /** Alias of removeGetOnceListener(). */
+    private removeGet;
+    /** Alias of removeGetEveryChangeListener(). */
+    private removeListen;
+    /** Alias of removeGetNextListener(). */
+    private removeNext;
     /**
      * Static function that waits for all specified ChangeTracker instances to
      * perform at least one getOnce. Returns a ChangeTracker instance to keep
@@ -67,14 +79,14 @@ export default class ChangeTracker<ValueType = any> {
      * The exact value as it's currently stored. Note that this may be undefined,
      * and is not ideal for all cases.
      */
-    get cachedValue(): ValueType | undefined;
-    set cachedValue(value: ValueType | undefined);
+    get cachedValue(): ValueType | any;
+    set cachedValue(value: ValueType | any);
     /**
      * Using this, you'll be notified the first time the value changes. If the
      * value has already been set, you'll be notified immediately.
      * @param {function} callback
      */
-    getOnce(callback: (value: ValueType | undefined) => void): void;
+    getOnce(callback: ((value: ValueType | any) => void) | Function): void;
     /**
      * Using this, you'll be notified every time the value changes. If the value
      * has already been set, you'll be notified immediately.
@@ -86,12 +98,12 @@ export default class ChangeTracker<ValueType = any> {
      * value.
      * @param {function} callback
      */
-    getNext(callback: (value: ValueType) => void): void;
+    getNext(callback: ((value: ValueType) => void) | Function): void;
     /**
      * Sets the value, then notifies those waiting for it.
      * @param {*} value
      */
-    setValue(value: ValueType | undefined): void;
+    setValue(value: ValueType | any): void;
     /**
      * Sets the value, but does not notify anything listening for changes. This
      * should not be done in most cases, and is likely to create state corruption
