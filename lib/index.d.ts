@@ -1,4 +1,4 @@
-declare type FlagType = {
+type FlagType = {
     forceSetFlag: boolean;
 };
 /**
@@ -91,8 +91,10 @@ export default class ChangeTracker<ValueType = any> {
      * Using this, you'll be notified every time the value changes. If the value
      * has already been set, you'll be notified immediately.
      * @param {function} callback
+     * @param {boolean} ignoreCurrent - If true, don't immediately call back if a
+     *   value has already been set.
      */
-    getEveryChange(callback: (value: ValueType | undefined) => void): void;
+    getEveryChange(callback: ((value: ValueType | any) => void) | Function, ignoreCurrent?: boolean | undefined): void;
     /**
      * Notified you the next time the value changes. Does not return the current
      * value.
