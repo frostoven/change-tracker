@@ -10,7 +10,7 @@ export default class ChangeTracker<ValueType = any> {
    * alter it.
    * @private
    */
-  private _cached: ValueType | undefined;
+  private _cached: ValueType | any;
 
   /**
    * Use this if you want to trick the constructor into setting undefined as
@@ -41,6 +41,19 @@ export default class ChangeTracker<ValueType = any> {
    */
   private _nextListeners: Function[];
 
+  /** Alias of getOnce(). */
+  private get: (callback: ((value: ValueType | any) => void) | Function) => void;
+  /** Alias of getEveryChange(). */
+  private listen: (callback: ((value: ValueType | any) => void) | Function) => void;
+  /** Alias of getNext(). */
+  private next: (callback: ((value: ValueType | any) => void) | Function) => void;
+  /** Alias of removeGetOnceListener(). */
+  private removeGet: (listener: Function) => boolean;
+  /** Alias of removeGetEveryChangeListener(). */
+  private removeListen: (listener: Function) => boolean;
+  /** Alias of removeGetNextListener(). */
+  private removeNext: (listener: Function) => boolean;
+
   /**
    * Static function that waits for all specified ChangeTracker instances to
    * perform at least one getOnce. Returns a ChangeTracker instance to keep
@@ -61,7 +74,7 @@ export default class ChangeTracker<ValueType = any> {
     const total = trackers.length;
     const results = new Array(total);
 
-    let timer: number;
+    let timer: number | NodeJS.Timer;
     if (timeoutMs > 0) {
       timer = setTimeout(() => {
         waiter.setValue({
@@ -77,7 +90,7 @@ export default class ChangeTracker<ValueType = any> {
         results[i] = value;
         if (++fulfilled === total) {
           if (timer) {
-            clearTimeout(timer);
+            clearTimeout(timer as number);
           }
           waiter.setValue({ error: null, results });
         }
@@ -116,17 +129,24 @@ export default class ChangeTracker<ValueType = any> {
     this._singleListeners = [];
     this._multiListeners = [];
     this._nextListeners = [];
+
+    this.get = this.getOnce;
+    this.listen = this.getEveryChange;
+    this.next = this.getNext;
+    this.removeGet = this.removeGetOnceListener;
+    this.removeListen = this.removeGetEveryChangeListener;
+    this.removeNext = this.removeGetNextListener;
   }
 
   /**
    * The exact value as it's currently stored. Note that this may be undefined,
    * and is not ideal for all cases.
    */
-  get cachedValue(): ValueType | undefined {
+  get cachedValue(): ValueType | any {
     return this._cached;
   }
 
-  set cachedValue(value: ValueType | undefined) {
+  set cachedValue(value: ValueType | any) {
     // Setting cache directly reduces readability if a user is not familiar
     // with the internals; warn.
     console.warn('ChangeTracker.cached should not be set directly. Use .setValue() instead.');
@@ -138,7 +158,7 @@ export default class ChangeTracker<ValueType = any> {
    * value has already been set, you'll be notified immediately.
    * @param {function} callback
    */
-  getOnce(callback: (value: ValueType | undefined) => void) {
+  getOnce(callback: ((value: ValueType | any) => void) | Function) {
     if (this._valueAlreadySet) {
       callback(this._cached);
     }
@@ -155,7 +175,7 @@ export default class ChangeTracker<ValueType = any> {
    *   value has already been set.
    */
   getEveryChange(
-    callback: ((value: ValueType | undefined) => void) | Function,
+    callback: ((value: ValueType | any) => void) | Function,
     ignoreCurrent?: boolean | undefined,
   ) {
     this._multiListeners.push(callback);
@@ -169,7 +189,7 @@ export default class ChangeTracker<ValueType = any> {
    * value.
    * @param {function} callback
    */
-  getNext(callback: (value: ValueType) => void) {
+  getNext(callback: ((value: ValueType) => void) | Function) {
     this._nextListeners.push(callback);
   }
 
@@ -177,7 +197,7 @@ export default class ChangeTracker<ValueType = any> {
    * Sets the value, then notifies those waiting for it.
    * @param {*} value
    */
-  setValue(value: ValueType | undefined) {
+  setValue(value: ValueType | any) {
     // We store all callbacks in here, then call them afterwards. This is to
     // prevent situations where a running function does something to make us
     // lose queue priority (like async operations) while another function tries
