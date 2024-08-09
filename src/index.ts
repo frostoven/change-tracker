@@ -42,17 +42,17 @@ export default class ChangeTracker<ValueType = any> {
   private _nextListeners: Function[];
 
   /** Alias of getOnce(). */
-  private get: (callback: ((value: ValueType | any) => void) | Function) => void;
+  public get: (callback: ((value: ValueType | any) => void) | Function) => void;
   /** Alias of getEveryChange(). */
-  private listen: (callback: ((value: ValueType | any) => void) | Function) => void;
+  public listen: (callback: ((value: ValueType | any) => void) | Function) => void;
   /** Alias of getNext(). */
-  private next: (callback: ((value: ValueType | any) => void) | Function) => void;
+  public next: (callback: ((value: ValueType | any) => void) | Function) => void;
   /** Alias of removeGetOnceListener(). */
-  private removeGet: (listener: Function) => boolean;
+  public removeGet: (listener: Function) => boolean;
   /** Alias of removeGetEveryChangeListener(). */
-  private removeListen: (listener: Function) => boolean;
+  public removeListen: (listener: Function) => boolean;
   /** Alias of removeGetNextListener(). */
-  private removeNext: (listener: Function) => boolean;
+  public removeNext: (listener: Function) => boolean;
 
   /**
    * Static function that waits for all specified ChangeTracker instances to
